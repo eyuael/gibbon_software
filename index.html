@@ -89,8 +89,8 @@
             0.1,
             1000
         );
-        camera.position.set(100, 50, 100);
-        camera.lookAt(0, 0, 0);
+        camera.position.set(150, 70, 150);
+        camera.lookAt(0, -30, 0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -107,12 +107,14 @@
 
         // OrbitControls for camera panning
         const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, 0, -30); // Position the orbit target lower on screen
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.autoRotate = true;
         controls.autoRotateSpeed = 2.0;
         controls.enableZoom = true;
         controls.enablePan = true;
+        controls.update(); // Update controls to apply target
 
         // Store reference to gibbon object
         let gibbonObject = null;
@@ -176,9 +178,6 @@
                 const rotY = (gibbonObject.rotation.y / Math.PI).toFixed(3);
                 const rotZ = (gibbonObject.rotation.z / Math.PI).toFixed(3);
 
-                document.getElementById('rot-x').textContent = rotX + 'π';
-                document.getElementById('rot-y').textContent = rotY + 'π';
-                document.getElementById('rot-z').textContent = rotZ + 'π';
             }
         }
     </script>
