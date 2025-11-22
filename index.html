@@ -41,6 +41,18 @@
             font-size: 12px;
             pointer-events: none;
         }
+        #rotation-info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -102,6 +114,9 @@
         controls.enableZoom = true;
         controls.enablePan = true;
 
+        // Store reference to gibbon object
+        let gibbonObject = null;
+
         // Load model
         const mtlLoader = new MTLLoader();
         mtlLoader.setPath(MODEL_PATH);
@@ -123,6 +138,14 @@
 
                 object.position.sub(center);
                 object.scale.multiplyScalar(scale);
+
+                // Rotate model for better starting position
+                object.rotation.x = Math.PI /2;  // 90 degrees anti-clockwise on X-axis
+                object.rotation.y = Math.PI ;
+                object.rotation.z = Math.PI * -0.3; // 90 degrees up on Y-axis
+
+                // Store reference for rotation display
+                gibbonObject = object;
 
                 scene.add(object);
 
@@ -146,6 +169,17 @@
             requestAnimationFrame(animate);
             controls.update();
             renderer.render(scene, camera);
+
+            // Update rotation display
+            if (gibbonObject) {
+                const rotX = (gibbonObject.rotation.x / Math.PI).toFixed(3);
+                const rotY = (gibbonObject.rotation.y / Math.PI).toFixed(3);
+                const rotZ = (gibbonObject.rotation.z / Math.PI).toFixed(3);
+
+                document.getElementById('rot-x').textContent = rotX + 'π';
+                document.getElementById('rot-y').textContent = rotY + 'π';
+                document.getElementById('rot-z').textContent = rotZ + 'π';
+            }
         }
     </script>
 </body>
