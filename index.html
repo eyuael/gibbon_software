@@ -104,7 +104,7 @@
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
         directionalLight.position.set(50, 100, 50);
         scene.add(directionalLight);
-
+ 
         // OrbitControls for camera panning
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.target.set(0, 0, -30); // Position the orbit target lower on screen
