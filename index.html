@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Silver Gibbon Viewer</title>
+    <title>Gibbon Software</title>
     <style>
         * {
             margin: 0;
@@ -47,16 +47,25 @@
     <div id="loading">Loading gibbon...</div>
     <div id="info">Drag to rotate • Scroll to zoom</div>
 
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script async src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/controls/OrbitControls.js"></script>
-    <script async src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/OBJLoader.js"></script>
-    <script async src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/loaders/MTLLoader.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+            }
+        }
+    </script>
 
-    <script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+        import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+
         // Configuration
         const MODEL_PATH = './models/';
-        const MODEL_FILE = '13666_Silver_Gibbon_v1_1_3.obj';
-        const MTL_FILE = '13666_Silver_Gibbon_v1_1_3.mtl';
+        const MODEL_FILE = '13566_Silver_Gibbon_v1_L3.obj';
+        const MTL_FILE = '13566_Silver_Gibbon_v1_L3.mtl';
 
         // Scene setup
         const scene = new THREE.Scene();
@@ -68,7 +77,8 @@
             0.1,
             1000
         );
-        camera.position.z = 150;
+        camera.position.set(100, 50, 100);
+        camera.lookAt(0, 0, 0);
 
         const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -84,21 +94,22 @@
         scene.add(directionalLight);
 
         // OrbitControls for camera panning
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
-        controls.autoRotate = false;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 2.0;
         controls.enableZoom = true;
         controls.enablePan = true;
 
         // Load model
-        const mtlLoader = new THREE.MTLLoader();
+        const mtlLoader = new MTLLoader();
         mtlLoader.setPath(MODEL_PATH);
 
         mtlLoader.load(MTL_FILE, (materials) => {
             materials.preload();
 
-            const objLoader = new THREE.OBJLoader();
+            const objLoader = new OBJLoader();
             objLoader.setMaterials(materials);
             objLoader.setPath(MODEL_PATH);
 
